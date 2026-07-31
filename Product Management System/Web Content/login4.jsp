@@ -4,37 +4,32 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Distributor Login Process</title>
 </head>
 <body>
 
 <%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 		<%
 		try
 		{
-		
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+			Connection con = getConnection();
 			String a = request.getParameter("txt1");
 			String b = request.getParameter("txt2");
-			String sql = "select * from distributer2 where uname = '"+a+"' and upassword = '"+b+"'";
+			String sql = "select * from distributer2 where uname = ? and upassword = ?";
 			
 			//set session
-			session.setAttribute("uid",a);
+			session.setAttribute("uid", a);
 			
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, a);
+			st.setString(2, b);
+			ResultSet rs = st.executeQuery();
 			
-			int flag = 0;
-			while(rs.next())
-			{
-				flag=1;
-			}
-			if(flag==1)
+			if(rs.next())
 			{
 				response.sendRedirect("home2.html");
 			}
-			
 			else
 			{
 				response.sendRedirect("login3.jsp");

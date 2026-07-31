@@ -109,12 +109,11 @@ table
 		<div id = "side2">
 		
 		<%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 		<%
 		try
 		{
-		
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+	Connection con = getConnection();
 			String sql = "select * from products";
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery(sql);

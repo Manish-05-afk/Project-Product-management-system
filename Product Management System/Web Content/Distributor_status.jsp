@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Distributor Order Status</title>
 <style>
 #container
 {
@@ -110,18 +110,19 @@ table
 		<div id = "side2">
 		
 		<%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 		<%
 		try
 		{
-		
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+			Connection con = getConnection();
 			
-			String s = session.getAttribute("uid").toString();
+			Object uidObj = session.getAttribute("uid");
+			String s = uidObj != null ? uidObj.toString() : "";
 			
-			String sql = "select * from order1 where dname='"+s+"'";
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
+			String sql = "select * from order1 where dname=?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, s);
+			ResultSet rs = st.executeQuery();
 			out.println("<table border = '1'>");
 			out.println("<tr bgcolor='lime'>");
 			out.println("<td>Distributer ID</td>");

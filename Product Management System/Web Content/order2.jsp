@@ -4,17 +4,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Order Process</title>
 </head>
 <body>
 
 <%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 <%
 try
 {
-	
-	Class.forName("com.mysql.jdbc.Driver");
-	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+	Connection con = getConnection();
 	String a = request.getParameter("txt1");
 	String b = request.getParameter("txt2");
 	String c = request.getParameter("txt3");
@@ -25,9 +24,17 @@ try
 	int x = Integer.parseInt(f);
 	int y = Integer.parseInt(g);
 	
-	String sql = "insert into order1 values ('"+a+"','"+b+"','"+c+"','"+d+"','"+e+"',"+x+","+y+")";
-	Statement st = con.createStatement();
-	st.executeUpdate(sql);
+	String sql = "insert into order1 (dist_id, dname, address, odate, pname, quantity, amount) values (?, ?, ?, ?, ?, ?, ?)";
+	PreparedStatement st = con.prepareStatement(sql);
+	st.setString(1, a);
+	st.setString(2, b);
+	st.setString(3, c);
+	st.setString(4, d);
+	st.setString(5, e);
+	st.setInt(6, x);
+	st.setInt(7, y);
+	
+	st.executeUpdate();
 	response.sendRedirect("home2.html");
 }
 catch(Exception ae)

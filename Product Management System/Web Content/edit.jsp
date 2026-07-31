@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Edit Product</title>
 <style>
 #container
 {
@@ -110,21 +110,21 @@ table
 		<div id = "side2">
 		
 		<%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 		<%
 		
 		String a="",b="",c="",f="";
 		int d=0,e=0;
 		try
 		{
-		
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+			Connection con = getConnection();
 			
 			String s = request.getParameter("txt1");
 			
-			String sql = "select * from products where id='"+s+"'";
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
+			String sql = "select * from products where id=?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, s);
+			ResultSet rs = st.executeQuery();
 			
 			while(rs.next())
 			{
@@ -134,11 +134,7 @@ table
 				d = rs.getInt(4);
 				e = rs.getInt(5);
 				f = rs.getString(6);
-				
-				
 			}
-			
-			
 		}
 		catch(Exception ae)
 		{

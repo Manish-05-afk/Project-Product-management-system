@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Order Product</title>
 <style>
 #container
 {
@@ -123,21 +124,21 @@ function abc()
 		<div id = "side2">
 		
 		<%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 		<%
 		
 		String a="";
 		int b=0,c=0,offer=0,c1=0;
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+			Connection con = getConnection();
 			
 			String s = request.getParameter("txt1");
 			
-			String sql = "select * from products where id='"+s+"'";
-			
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
+			String sql = "select * from products where id=?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, s);
+			ResultSet rs = st.executeQuery();
 			
 			while(rs.next())
 			{
@@ -157,7 +158,8 @@ function abc()
 		%>
 		
 		<%
-		String s = session.getAttribute("uid").toString();
+		Object uidObj = session.getAttribute("uid");
+		String s = uidObj != null ? uidObj.toString() : "";
 		
 		%>
 		<center>

@@ -4,16 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Add Product Process</title>
 </head>
 <body>
 <%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 <%
 try
 {
-	
-	Class.forName("com.mysql.jdbc.Driver");
-	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+	Connection con = getConnection();
 	String a = request.getParameter("txt1");
 	String b = request.getParameter("txt2");
 	String c = request.getParameter("txt3");
@@ -22,9 +21,17 @@ try
 	String f = request.getParameter("txt6");
 	int x = Integer.parseInt(d);
 	int y = Integer.parseInt(e);
-	String sql = "insert into products values ('"+a+"','"+b+"','"+c+"',"+x+","+y+",'"+f+"')";
-	Statement st = con.createStatement();
-	st.executeUpdate(sql);
+	
+	String sql = "insert into products (id, pname, catagory, quantity, cost_price, pstatus) values (?, ?, ?, ?, ?, ?)";
+	PreparedStatement st = con.prepareStatement(sql);
+	st.setString(1, a);
+	st.setString(2, b);
+	st.setString(3, c);
+	st.setInt(4, x);
+	st.setInt(5, y);
+	st.setString(6, f);
+	
+	st.executeUpdate();
 	response.sendRedirect("home.html");
 }
 catch(Exception ae)

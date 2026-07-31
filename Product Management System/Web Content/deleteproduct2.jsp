@@ -4,29 +4,29 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Delete Product Process</title>
 </head>
 <body>
-
 <%@ page import = "java.sql.*" %>
-		<%
-		try
-		{
-		
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
-			String a = request.getParameter("txt1");
-			String sql = "delete from products where id = '"+a+"'";
-			Statement st = con.createStatement();
-			st.executeUpdate(sql);
-			response.sendRedirect("viewproduct.jsp");
-		}
-		catch(Exception ae)
-		{
-			out.println(ae);
-		}
+<%@ include file="db.jsp" %>
+<%
+try
+{
+	Connection con = getConnection();
+	String a = request.getParameter("txt1");
+	
+	String sql = "delete from products where id = ?";
+	PreparedStatement st = con.prepareStatement(sql);
+	st.setString(1, a);
+	
+	st.executeUpdate();
+	response.sendRedirect("viewproduct.jsp");
+}
+catch(Exception ae)
+{
+	out.println(ae);
+}
 
-		%>
-
+%>
 </body>
 </html>

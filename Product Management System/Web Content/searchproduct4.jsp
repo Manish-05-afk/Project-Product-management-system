@@ -107,27 +107,20 @@ table
 		<div id = "side2">
 		
 		<%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
 		<%
 		try
 		{
-		
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/product_management_system","root","");
+			Connection con = getConnection();
 			String c = request.getParameter("txt1");
-			String sql = "select * from products where catagory = '"+c+"'";
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
+			String sql = "select * from products where catagory = ?";
+			PreparedStatement st = con.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			st.setString(1, c);
+			ResultSet rs = st.executeQuery();
 			
-			Statement st1 = con.createStatement();
-			ResultSet rs1 = st1.executeQuery(sql);
-			
-			int flag = 0;
-			while(rs.next())
+			if(rs.next())
 			{
-				flag=1;
-			}
-			if(flag==1)
-			{
+				rs.beforeFirst(); // Reset to start
 				out.println("<table border = '1'>");
 				out.println("<tr bgcolor='lime'>");
 				out.println("<td>Product ID</td>");
@@ -138,14 +131,14 @@ table
 				out.println("<td>Product Status</td>");
 				out.println("<td>Order Product</td>");
 				out.println("</tr>");
-				while(rs1.next())
+				while(rs.next())
 				{
-					String a = rs1.getString(1);
-					String b = rs1.getString(2);
-					String c1 = rs1.getString(3);
-					int d = rs1.getInt(4);
-					int e = rs1.getInt(5);
-					String f = rs1.getString(6);
+					String a = rs.getString(1);
+					String b = rs.getString(2);
+					String c1 = rs.getString(3);
+					int d = rs.getInt(4);
+					int e = rs.getInt(5);
+					String f = rs.getString(6);
 					
 					out.println("<tr>");
 					out.println("<td>"+a+"</td>");
@@ -159,7 +152,6 @@ table
 				}	
 				out.println("</table>");
 			}
-			
 			else
 			{
 				out.println("Data not found");
