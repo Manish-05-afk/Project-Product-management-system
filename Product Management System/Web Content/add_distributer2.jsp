@@ -1,41 +1,69 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import = "java.sql.*" %>
+<%@ include file="db.jsp" %>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Distributor Registration Process</title>
 </head>
 <body>
-<%@ page import = "java.sql.*" %>
-<%@ include file="db.jsp" %>
 <%
+Connection con = null;
+PreparedStatement st = null;
 try
 {
-	Connection con = getConnection();
-	String a = request.getParameter("txt1");
-	String b = request.getParameter("txt2");
-	String c = request.getParameter("txt3");
-	String d = request.getParameter("txt4");
-	String e = request.getParameter("txt5");
-	int x = Integer.parseInt(c);
+	con = (Connection) request.getAttribute("dbConnection");
+	if (con == null || con.isClosed()) {
+		String dbHost = System.getenv("MYSQLHOST") != null ? System.getenv("MYSQLHOST") : "localhost";
+		String dbPort = System.getenv("MYSQLPORT") != null ? System.getenv("MYSQLPORT") : "3306";
+		String dbName = System.getenv("MYSQLDATABASE") != null ? System.getenv("MYSQLDATABASE") : "product_management_system";
+		String dbUser = System.getenv("MYSQLUSER") != null ? System.getenv("MYSQLUSER") : "root";
+		String dbPass = System.getenv("MYSQLPASSWORD") != null ? System.getenv("MYSQLPASSWORD") : "root";
+		
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		con = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName, dbUser, dbPass);
+	}
+
+	String dname = request.getParameter("txt1");     // Name
+	String upassword = request.getParameter("txt2"); // Password
+	String dcontact = request.getParameter("txt3");  // Phone Number
+	String uname = request.getParameter("txt4");     // Username/Email
+	String daddress = request.getParameter("txt5");  // Address
+	
+	long x = Long.parseLong(dcontact.trim());
 	
 	String sql = "insert into distributer2 (dname, uname, dcontact, daddress, upassword) values (?, ?, ?, ?, ?)";
-	PreparedStatement st = con.prepareStatement(sql);
-	st.setString(1, a);
-	st.setString(2, b);
-	st.setInt(3, x);
-	st.setString(4, d);
-	st.setString(5, e);
+	st = con.prepareStatement(sql);
+	st.setString(1, dname);
+	st.setString(2, uname);
+	st.setLong(3, x);
+	st.setString(4, daddress);
+	st.setString(5, upassword);
 	
-	st.executeUpdate();
-	response.sendRedirect("login3.jsp");
+	int rows = st.executeUpdate();
+	if(rows > 0) {
+		out.println("<script>alert('Distributor Registered Successfully!'); window.location='login3.jsp';</script>");
+	} else {
+		out.println("<script>alert('Registration Failed!'); window.location='add_distrubuter.jsp';</script>");
+	}
 }
 catch(Exception ae)
 {
-	out.println(ae);
+	out.println("Registration Error: " + ae.getMessage());
 }
-
+finally
+{
+	if(st != null) try { st.close(); } catch(SQLException ex) {}
+	if(con != null) try { con.close(); } catch(SQLException ex) {}
+}
 %>
 </body>
 </html>
+
+	out.println("Registration Error: " + ae.getMessage());
+}	
+%>
+</body>
+</html> -->

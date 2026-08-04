@@ -4,90 +4,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>View Orders</title>
 <style>
-#container
-{
-	width:100%;
-	height:auto;
-}
-#header
-{
-	width:100%;
-	height:150px;
-	background-color:cyan;
-}
-#logo
-{
-	width:100px;
-	height:100px;
-	border:1px solid blue;
-	margin-top:20px;
-	position:absolute;
-	margin-left:50px;
-	background-image:url("product.jpg");
-	background-size:cover;
-}
-#heading
-{
-	width:100%;
-	height:150px;
-	margin-left:200px;
-}
-#home
-{
-	width:100%;
-	height:50px;
-	background-color:yellow;
-	margin-top:-20px;
-}
-#contain
-{
-	width:100%;
-	height:400px;
-	
-}
-#side1
-{
-	width:10%;
-	height:400px;
-	background-color:rgb(22,255,228);
-	float:left;
-}
-#side2
-{
-	width:90%;
-	height:400px;
-	background-color:white;
-	margin-left:10%;
-}
-#footer
-{
-	width:100%;
-	height:80px;
-	background-color:orange;
-}
-ul li
-{
-	list-style-type:none;
-	padding-top:20px;
-}
-ul li a
-{
-	text-decoration:none;
-	font-size:14px;
-}
-ul li a:hover
-{
-	border-bottom:3px solid rgb(66,64,255);
-	cursor pointer;
-}
-
-table
-{
-	height:250px;
-	width:80%;
-	margin-left:10%;
-}
+#container { width:100%; height:auto; }
+#header { width:100%; height:150px; background-color:cyan; }
+#logo { width:100px; height:100px; border:1px solid blue; margin-top:20px; position:absolute; margin-left:50px; background-image:url("product.jpg"); background-size:cover; }
+#heading { width:100%; height:150px; margin-left:200px; }
+#home { width:100%; height:50px; background-color:yellow; margin-top:-20px; }
+#contain { width:100%; min-height:400px; }
+#side1 { width:10%; min-height:400px; background-color:rgb(22,255,228); float:left; }
+#side2 { width:90%; min-height:400px; background-color:white; margin-left:10%; }
+#footer { width:100%; height:80px; background-color:orange; }
+ul li { list-style-type:none; padding-top:20px; }
+ul li a { text-decoration:none; font-size:14px; }
+ul li a:hover { border-bottom:3px solid rgb(66,64,255); cursor: pointer; }
+table { height:auto; width:80%; margin-left:10%; margin-top:20px; }
+th, td { padding: 8px; text-align: center; }
 </style>
 </head>
 <body>
@@ -96,7 +28,7 @@ table
 		<div id = "logo"></div>
 		<div id = "heading"><br><h1>Product Management System</h1></div>
 	</div>
-	<div id = "home"><h1>View Product</h1></div>
+	<div id = "home"><h1>View Orders</h1></div>
 	<div id = "contain">
 		<div id = "side1">
 			<ul>
@@ -109,57 +41,74 @@ table
 		<div id = "side2">
 		
 		<%@ page import = "java.sql.*" %>
-<%@ include file="db.jsp" %>
+		<%@ include file="db.jsp" %>
 		<%
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
 		try
 		{
-	Connection con = getConnection();
+			con = (Connection) request.getAttribute("dbConnection");
+			if (con == null || con.isClosed()) {
+				String dbHost = System.getenv("MYSQLHOST") != null ? System.getenv("MYSQLHOST") : "localhost";
+				String dbPort = System.getenv("MYSQLPORT") != null ? System.getenv("MYSQLPORT") : "3306";
+				String dbName = System.getenv("MYSQLDATABASE") != null ? System.getenv("MYSQLDATABASE") : "product_management_system";
+				String dbUser = System.getenv("MYSQLUSER") != null ? System.getenv("MYSQLUSER") : "root";
+				String dbPass = System.getenv("MYSQLPASSWORD") != null ? System.getenv("MYSQLPASSWORD") : "root";
+				
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				con = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName, dbUser, dbPass);
+			}
+
 			String sql = "select * from order1";
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
 			out.println("<table border = '1'>");
 			out.println("<tr bgcolor='lime'>");
-			out.println("<td>Distributer ID</td>");
-			out.println("<td>Distributer Name</td>");
+			out.println("<td>Distributor ID</td>");
+			out.println("<td>Distributor Name</td>");
 			out.println("<td>Address</td>");
-			out.println("<td>Order date</td>");
+			out.println("<td>Order Date</td>");
 			out.println("<td>Product Name</td>");
 			out.println("<td>Product Quantity</td>");
-			out.println("<td>Distributer Amount</td>");
+			out.println("<td>Total Amount</td>");
 			out.println("</tr>");
+			
+			boolean hasOrders = false;
 			while(rs.next())
 			{
-				String a = rs.getString(1);
-				String b = rs.getString(2);
-				String c = rs.getString(3);
-				String d = rs.getString(4);				
-				String e = rs.getString(5);
-				int f = rs.getInt(6);
-				int g = rs.getInt(7);
-				
+				hasOrders = true;
 				out.println("<tr>");
-				out.println("<td>"+a+"</td>");
-				out.println("<td>"+b+"</td>");
-				out.println("<td>"+c+"</td>");
-				out.println("<td>"+d+"</td>");
-				out.println("<td>"+e+"</td>");
-				out.println("<td>"+f+"</td>");
-				out.println("<td>"+g+"</td>");
+				out.println("<td>"+rs.getString(1)+"</td>");
+				out.println("<td>"+rs.getString(2)+"</td>");
+				out.println("<td>"+rs.getString(3)+"</td>");
+				out.println("<td>"+rs.getString(4)+"</td>");
+				out.println("<td>"+rs.getString(5)+"</td>");
+				out.println("<td>"+rs.getInt(6)+"</td>");
+				out.println("<td>"+rs.getInt(7)+"</td>");
 				out.println("</tr>");
 			}
-			
 			out.println("</table>");
+			
+			if(!hasOrders) {
+				out.println("<center><h3>No orders found in the database.</h3></center>");
+			}
 		}
 		catch(Exception ae)
 		{
-			out.println(ae);
+			out.println("Error displaying orders: " + ae.getMessage());
 		}
-
+		finally
+		{
+			if(rs != null) try { rs.close(); } catch(SQLException ex) {}
+			if(st != null) try { st.close(); } catch(SQLException ex) {}
+			if(con != null) try { con.close(); } catch(SQLException ex) {}
+		}
 		%>
 		
 		<br>
-		<p><center><a href="home2.html">Back to Home Page</a></center><p>
-		<p><center><a href="Main.html">Log out</a></center><p>
+		<p><center><a href="home.html">Back to Home Page</a></center></p>
+		<p><center><a href="login1.jsp">Log out</a></center></p>
 		</div>
 	</div>
 	<div id = "footer"></div>

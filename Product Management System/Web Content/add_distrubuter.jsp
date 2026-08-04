@@ -4,82 +4,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Add Distributor</title>
 <style>
-#container
-{
-	width:100%;
-	height:auto;
-}
-#header
-{
-	width:100%;
-	height:150px;
-	background-color:cyan;
-}
-#logo
-{
-	width:100px;
-	height:100px;
-	border:1px solid blue;
-	margin-top:20px;
-	position:absolute;
-	margin-left:50px;
-	background-image:url("product.jpg");
-	background-size:cover;
-}
-#heading
-{
-	width:100%;
-	height:150px;
-	margin-left:200px;
-}
-#home
-{
-	width:100%;
-	height:50px;
-	background-color:yellow;
-	margin-top:-20px;
-}
-#contain
-{
-	width:100%;
-	height:400px;
-}
-#side1
-{
-	width:10%;
-	height:400px;
-	background-color:rgb(22,255,228);
-	float:left;
-}
-#side2
-{
-	width:90%;
-	height:400px;
-	background-color:white;
-	margin-left:10%;
-}
-#footer
-{
-	width:100%;
-	height:80px;
-	background-color:orange;
-}
-ul li
-{
-	list-style-type:none;
-	padding-top:20px;
-}
-ul li a
-{
-	text-decoration:none;
-	font-size:14px;
-}
-ul li a:hover
-{
-	border-bottom:3px solid rgb(66,64,255);
-	cursor pointer;
-}
+#container { width:100%; height:auto; }
+#header { width:100%; height:150px; background-color:cyan; }
+#logo { width:100px; height:100px; border:1px solid blue; margin-top:20px; position:absolute; margin-left:50px; background-image:url("product.jpg"); background-size:cover; }
+#heading { width:100%; height:150px; margin-left:200px; }
+#home { width:100%; height:50px; background-color:yellow; margin-top:-20px; }
+#contain { width:100%; height:400px; }
+#side1 { width:10%; height:400px; background-color:rgb(22,255,228); float:left; }
+#side2 { width:90%; height:400px; background-color:white; margin-left:10%; }
+#footer { width:100%; height:80px; background-color:orange; }
+ul li { list-style-type:none; padding-top:20px; }
+ul li a { text-decoration:none; font-size:14px; }
+ul li a:hover { border-bottom:3px solid rgb(66,64,255); cursor: pointer; }
 </style>
 
 <script>
@@ -91,15 +29,17 @@ function abc()
 	var d = document.f1.txt4.value;
 	var e = document.f1.txt5.value;
 	
-	if(a=="" || b=="" || c=="" || d=="" || e=="")
+	if(a.trim()=="" || b.trim()=="" || c.trim()=="" || d.trim()=="" || e.trim()=="")
 	{
-		alert("Please fill the box!");
+		alert("Please fill all the boxes!");
 		return false;
 	}
-	else
-		{
-			return true;
-		}
+	if(isNaN(c.trim()))
+	{
+		alert("Phone Number must contain only numbers!");
+		return false;
+	}
+	return true;
 }
 </script>
 
@@ -110,7 +50,7 @@ function abc()
 		<div id = "logo"></div>
 		<div id = "heading"><br><h1>Product Management System</h1></div>
 	</div>
-	<div id = "home"><h1>Add Distributer</h1></div>
+	<div id = "home"><h1>Add Distributor</h1></div>
 	<div id = "contain">
 		<div id = "side1">
 			<ul>
@@ -124,15 +64,15 @@ function abc()
 		<tr><td>Enter Name</td><td><input type = "text" name = "txt1"></td></tr>
 		<tr><td>Enter Password</td><td><input type = "password" name = "txt2"></td></tr>
 		<tr><td>Enter Phone Number</td><td><input type = "text" name = "txt3"></td></tr>
-		<tr><td>Enter email</td><td><input type = "text" name = "txt4"></td></tr>
+		<tr><td>Enter Username / Email</td><td><input type = "text" name = "txt4"></td></tr>
 		<tr><td>Enter Address</td><td><input type = "text" name = "txt5"></td></tr>
-		<tr><td><input type = "submit" name = "sub" value = "Add" onclick = "return abc()"></td></tr>
+		<tr><td colspan="2" align="center"><input type = "submit" name = "sub" value = "Add" onclick = "return abc()"></td></tr>
 		</table>
 		</form>
 		</center>
 		<br>
-		<p><center><a href="Main.html">Back to Main page</a></center><p>
-		<p><center><a href="login1.jsp">Log in</a></center><p>
+		<p><center><a href="Main.html">Back to Main page</a></center></p>
+		<p><center><a href="login3.jsp">Log in</a></center></p>
 		</div>
 	</div>
 	<div id = "footer"></div>
